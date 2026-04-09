@@ -1,0 +1,44 @@
+<%- include('partials/header') %>
+
+<main class="categories-page">
+    <div class="content-header">
+        <h1><%= title %></h1>
+        <div class="header-actions">
+            <% if (user && user.role_name === 'admin') { %>
+                <a href="/new-category" class="button button-add">
+                    <i data-lucide="plus-circle" class="icon-sm"></i>
+                    Add Category
+                </a>
+            <% } %>
+        </div>
+    </div>
+
+    <h2>Our Service Categories</h2>
+    <p>Explore the various service categories available through our network.</p>
+
+    <% if (!categories || categories.length === 0) { %>
+        <div class="category-card">
+            <p>No categories available at this time.</p>
+        </div>
+    <% } else { %>
+        <div class="categories-container">
+            <% categories.forEach(category => { %>
+                <div class="category-card">
+                    <h3><a href="/category/<%= category.category_id %>"><%= category.name %></a></h3>
+                    <p><%= category.description %></p>
+                    <div class="card-actions justify-center">
+                        <a href="/category/<%= category.category_id %>" class="button button-outline flex-1">View Projects</a>
+                        <% if (user && user.role_name === 'admin') { %>
+                            <a href="/edit-category/<%= category.category_id %>" class="button button-edit" title="Edit">
+                                <i data-lucide="edit-2" class="icon-sm"></i>
+                                Edit
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+</main>
+
+<%- include('partials/footer') %>

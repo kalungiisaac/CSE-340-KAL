@@ -1,0 +1,44 @@
+<%- include('partials/header') %>
+
+<main class="organizations-page">
+    <div class="content-header">
+        <h1><%= title %></h1>
+        <div class="header-actions">
+            <% if (user && user.role_name === 'admin') { %>
+                <a href="/new-organization" class="button button-add">
+                    <i data-lucide="plus-circle" class="icon-sm"></i>
+                    Add Organization
+                </a>
+            <% } %>
+        </div>
+    </div>
+
+    <p class="intro-text">Here are a few of our partner organizations:</p>
+
+    <div class="organizations-grid">
+        <% organizations.forEach(organization => { %>
+            <div class="organization-card">
+                <div class="org-icon">
+                    <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> Logo">
+                </div>
+                <div class="org-content">
+                    <h3><a href="/organization/<%= organization.organization_id %>"><%= organization.name %></a></h3>
+                    <p><%= organization.description %></p>
+                    <p class="contact-email"><a href="mailto:<%= organization.contact_email %>"><%= organization.contact_email %></a></p>
+                    <div class="card-actions">
+                        <a href="/organization/<%= organization.organization_id %>" class="button button-outline flex-1">View</a>
+                        <% if (user && user.role_name === 'admin') { %>
+                            <a href="/edit-organization/<%= organization.organization_id %>" class="button button-edit" title="Edit">
+                                <i data-lucide="edit-2" class="icon-sm"></i>
+                                Edit
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+    
+</main>
+
+<%- include('partials/footer') %>

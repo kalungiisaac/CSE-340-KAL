@@ -1,0 +1,19 @@
+<%- include('../partials/header') %>
+
+<main class="error-page error-500">
+    <div class="error-container">
+        <div class="error-icon error-500-icon">🤖</div>
+        <h1 class="error-code">500 Internal Server Error</h1>
+        <p class="error-message">Something went wrong on our end.<br>We're working to fix it as soon as possible.</p>
+        <a class="error-home-link" href="/">&larr; Back to Home</a>
+        <% if (NODE_ENV === 'development') { %>
+            <details style="margin-top:2rem;">
+                <summary>See Error Details </summary>
+                <pre class="error-details"><%= error %></pre>
+                <pre class="error-details"><%= stack %></pre>
+            </details>
+        <% } %>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

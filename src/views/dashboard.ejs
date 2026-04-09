@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+
+    <section class="dashboard-info">
+        <h2>Welcome, <%= name %>!</h2>
+        <div class="user-details-card">
+            <p><strong>Name:</strong> <%= name %></p>
+            <p><strong>Username:</strong> <%= username %></p>
+            <p><strong>Email:</strong> <%= email %></p>
+            <p><strong>Role:</strong> <span class="role-badge"><%= role %></span></p>
+        </div>
+    </section>
+
+    <h2 class="mt-12">Quick Actions</h2>
+    <div class="dashboard-grid">
+        <a href="/projects" class="action-card">
+            <i data-lucide="briefcase" class="icon-lg"></i>
+            <h3>Explore Projects</h3>
+            <p>Browse available service opportunities.</p>
+            <span class="action-btn">View All</span>
+        </a>
+
+        <% if (role === 'admin') { %>
+            <a href="/organizations" class="action-card">
+                <i data-lucide="building-2" class="icon-lg"></i>
+                <h3>Manage Organizations</h3>
+                <p>Add or edit service partners.</p>
+                <span class="action-btn">Manage</span>
+            </a>
+            <a href="/categories" class="action-card">
+                <i data-lucide="layers" class="icon-lg"></i>
+                <h3>Service Categories</h3>
+                <p>Manage project classification.</p>
+                <span class="action-btn">Configure</span>
+            </a>
+        <% } %>
+    </div>
+
+</main>
+
+<%- include('partials/footer') %>

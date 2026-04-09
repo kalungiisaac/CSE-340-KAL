@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/button.js" defer></script>
+    <script src="/js/password-toggle.js" defer></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i data-lucide="globe" class="icon-blue"></i>
+                    CSE 340 Service Network
+                </a>
+                <ul>
+                    <li><a href="/" class="<%= currentPath === '/' ? 'active' : '' %>" <%= currentPath === '/' ? 'aria-current="page"' : '' %>><i data-lucide="home" class="icon-sm"></i> Home</a></li>
+                    <li><a href="/organizations" class="<%= currentPath.startsWith('/organization') ? 'active' : '' %>" <%= currentPath.startsWith('/organization') ? 'aria-current="page"' : '' %>><i data-lucide="building-2" class="icon-sm"></i> Organizations</a></li>
+                    <li><a href="/projects" class="<%= currentPath.startsWith('/project') ? 'active' : '' %>" <%= currentPath.startsWith('/project') ? 'aria-current="page"' : '' %>><i data-lucide="briefcase" class="icon-sm"></i> Projects</a></li>
+                    <li><a href="/categories" class="<%= currentPath.startsWith('/categor') ? 'active' : '' %>" <%= currentPath.startsWith('/categor') ? 'aria-current="page"' : '' %>><i data-lucide="layers" class="icon-sm"></i> Categories</a></li>
+                    <% if (isLoggedIn) { %>
+                        <li><a href="/logout" class="<%= currentPath === '/logout' ? 'active' : '' %>" <%= currentPath === '/logout' ? 'aria-current="page"' : '' %>><i data-lucide="log-out" class="icon-sm"></i> Logout</a></li>
+                    <% } else { %>
+                        <li><a href="/register" class="button-outline <%= currentPath === '/register' ? 'active' : '' %>" <%= currentPath === '/register' ? 'aria-current="page"' : '' %>><i data-lucide="user-plus" class="icon-sm"></i> Register</a></li>
+                        <li><a href="/login" class="button <%= currentPath === '/login' ? 'active' : '' %>" <%= currentPath === '/login' ? 'aria-current="page"' : '' %>><i data-lucide="log-in" class="icon-sm"></i> Login</a></li>
+                    <% } %>
+                </ul>            </div>
+        </nav>
+    </header>
+    <div id="flash-messages">
+        <% if (typeof flash !== 'undefined') { %>
+            <% const messages = flash(); %>
+            <% Object.keys(messages).forEach(type => { %>
+                <% if (messages[type].length > 0) { %>
+                    <% messages[type].forEach(msg => { %>
+                        <div class="alert <%= type %>">
+                            <%= msg %>
+                        </div>
+                    <% }); %>
+                <% } %>
+            <% }); %>
+        <% } %>
+    </div>

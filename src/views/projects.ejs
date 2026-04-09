@@ -1,0 +1,87 @@
+<%- include('partials/header') %>
+
+<main class="projects-page">
+    <section class="projects-hero">
+        <div class="hero-content">
+            <h1><%= title %></h1>
+            <p class="hero-subtitle">Connecting passionate volunteers with meaningful service opportunities across our global network.</p>
+        </div>
+    </section>
+
+    <div class="projects-content-wrapper">
+        <div class="content-header">
+            <h2>Current Opportunities</h2>
+            <div class="header-actions">
+                <% if (user && user.role_name === 'admin') { %>
+                    <a href="/new-project" class="button button-add">
+                    <i data-lucide="plus-circle" class="icon-sm"></i>
+                    Add Service Project
+                </a>
+                <% } %>
+            </div>
+            <div class="results-count">Showing <%= projects.length %> projects</div>
+        </div>
+
+        <% if (!projects || projects.length === 0) { %>
+            <div class="project-card empty-state">
+                <p>No upcoming service projects are available at this time. Check back soon!</p>
+            </div>
+        <% } else { %>
+            <div class="projects-container">
+                <% projects.forEach(project => { %>
+                    <div class="project-card">
+                        <div class="project-header">
+                            <% const dateObj = project.date ? new Date(project.date) : null; %>
+                            <% if (dateObj) { %>
+                                <div class="date-badge">
+                                    <span class="month"><%= dateObj.toLocaleDateString('en-US', { month: 'short' }) %></span>
+                                    <span class="day"><%= dateObj.getDate() %></span>
+                                </div>
+                            <% } %>
+                            <div class="title-area">
+                                <span class="status-badge">Active</span>
+                                <h3><a href="/project/<%= project.project_id %>"><%= project.title %></a></h3>
+                            </div>
+                        </div>
+
+                        <div class="project-info">
+                            <p class="org-name">
+                                <span class="label">Organization</span>
+                                <a href="/organization/<%= project.organization_id %>">
+                                    <i data-lucide="building-2" class="icon-sm"></i>
+                                    <%= project.organization_name %>
+                                </a>
+                            </p>
+                            
+                            <% if (project.description) { %>
+                                <p class="description"><%= project.description.substring(0, 100) %><%= project.description.length > 100 ? '...' : '' %></p>
+                            <% } %>
+
+                            <% if (project.location) { %>
+                                <div class="location">
+                                    <i data-lucide="map-pin" class="icon-sm"></i>
+                                    <span><%= project.location %></span>
+                                </div>
+                            <% } %>
+                        </div>
+                        
+                        <div class="project-footer flex gap-2">
+                            <a href="/project/<%= project.project_id %>" class="project-btn flex-1">
+                                Details
+                                <i data-lucide="arrow-right" class="icon-sm"></i>
+                            </a>
+                            <% if (user && user.role_name === 'admin') { %>
+                                <a href="/edit-project/<%= project.project_id %>" class="button button-edit" title="Edit">
+                                    <i data-lucide="edit-2" class="icon-sm"></i>
+                                    Edit
+                                </a>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+    </div>
+</main>
+
+<%- include('partials/footer') %>
