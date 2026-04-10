@@ -402,7 +402,23 @@ main {
 .pro-hamburger[aria-expanded="true"] .hamburger-inner::before { transform: translateY(8px) rotate(45deg); background:#0369a1 }
 .pro-hamburger[aria-expanded="true"] .hamburger-inner::after  { transform: translateY(-8px) rotate(-45deg); background:#0369a1 }
 
-/* Side drawer - slides from right */
+/* Side drawer overlay - covers screen to allow closing on click */
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000; /* Just below drawer */
+}
+
+.drawer-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Side drawer - dark theme to make light text stand out */
 .side-drawer {
     position: fixed;
     top: 0;
@@ -410,10 +426,10 @@ main {
     width: 320px;
     max-width: 85%;
     height: 100%;
-    background: #ffffff;
-    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.2);
+    background: #1a202c; /* Match header dark theme */
+    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.4);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1001;
+    z-index: 1001; /* Above overlay */
     display: flex;
     flex-direction: column;
 }
@@ -427,25 +443,21 @@ main {
     align-items: center;
     justify-content: space-between;
     padding: 1.5rem;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Drawer brand: ensure high contrast inside white drawer */
+/* Drawer brand: high contrast for dark drawer */
 .side-drawer .nav-brand {
-    color: #0f172a; /* dark text for readability */
+    color: #ffffff;
     font-weight: 800;
     font-size: 1.125rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
-.side-drawer .nav-brand [data-lucide], .side-drawer .nav-brand i {
-    color: #2563eb; /* brand accent for icon */
-    stroke: currentColor;
-}
 
 .drawer-close {
-    background: #f1f5f9;
+    background: rgba(255, 255, 255, 0.05);
     border: none;
     width: 36px;
     height: 36px;
@@ -454,15 +466,15 @@ main {
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    color: #475569;
+    color: #e6eef8;
     cursor: pointer;
     transition: all 0.2s;
     line-height: 1;
 }
 
 .drawer-close:hover {
-    background: #e2e8f0;
-    color: #0f172a;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
     transform: scale(1.1);
 }
 
@@ -486,7 +498,7 @@ main {
     align-items: center;
     gap: 1rem;
     padding: 0.85rem 1.25rem;
-    color: #e6eef8; /* Ensure links are visible by default */
+    color: #e6eef8; /* Restored as requested */
     text-decoration: none;
     font-weight: 700;
     font-size: 1.05rem;
@@ -495,7 +507,7 @@ main {
 }
 
 .drawer-nav a:hover {
-    background: rgba(255,255,255,0.03);
+    background: rgba(255, 255, 255, 0.05);
     color: #63b3ed;
     padding-left: 1.5rem;
 }

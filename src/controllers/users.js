@@ -114,6 +114,7 @@ const processLogout = async (req, res) => {
         delete req.session.user;
     }
 
+    req.session.openMenu = true; // Auto-open menu on the next page (login)
     req.flash('success', 'Logout successful!');
     res.redirect('/login');
 };
