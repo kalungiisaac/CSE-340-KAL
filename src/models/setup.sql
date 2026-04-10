@@ -12,6 +12,8 @@
 -- DROP EXISTING TABLES (Clean start)
 -- =====================================================
 -- Drop tables in correct order (respect foreign key dependencies)
+DROP TABLE IF EXISTS volunteer;
+
 DROP TABLE IF EXISTS project_categories;
 
 DROP TABLE IF EXISTS service_project;
@@ -403,6 +405,23 @@ CREATE TABLE users (
 
 -- INSERT DEFAULT ROLES
 INSERT INTO roles (role_name) VALUES ('user'), ('admin');
+
+-- =====================================================
+-- CREATE VOLUNTEER TABLE (Junction table for many-to-many relationship)
+-- =====================================================
+CREATE TABLE volunteer (
+    volunteer_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    project_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (user_id, project_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES service_project (project_id) ON DELETE CASCADE
+);
+
+-- Create index for faster queries
+CREATE INDEX idx_volunteer_user ON volunteer (user_id);
+CREATE INDEX idx_volunteer_project ON volunteer (project_id);
 
 -- =====================================================
 -- VERIFY DATA

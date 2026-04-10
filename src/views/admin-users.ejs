@@ -1,0 +1,57 @@
+<%- include('partials/header') %>
+<main>
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">All Registered Users</div>
+                <div class="meta">Admin-only view — manage your users securely</div>
+            </div>
+            <div class="controls">
+                <input type="search" class="search-input" placeholder="Search users by name, email, or username" aria-label="Search users">
+            </div>
+        </div>
+        <div class="card-body">
+            <div style="overflow-x:auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width:6%">#</th>
+                            <th style="width:30%">Name</th>
+                            <th style="width:30%">Email</th>
+                            <th style="width:18%">Username</th>
+                            <th style="width:16%">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (users && users.length) { %>
+                            <% users.forEach(user => { %>
+                                <tr>
+                                    <td class="muted"><%= user.user_id %></td>
+                                    <td><strong><%= user.name %></strong></td>
+                                    <td class="muted"><%= user.email %></td>
+                                    <td class="muted"><%= user.username %></td>
+                                    <td>
+                                        <% if (user.role_name === 'admin') { %>
+                                            <span class="role-badge role-admin">ADMIN</span>
+                                        <% } else { %>
+                                            <span class="role-badge role-user">USER</span>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5">No users found.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top:1rem; display:flex; justify-content:space-between; align-items:center;">
+                <a href="/dashboard" class="button">Back to Dashboard</a>
+                <div class="meta"><%= users ? users.length : 0 %> users</div>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('partials/footer') %>

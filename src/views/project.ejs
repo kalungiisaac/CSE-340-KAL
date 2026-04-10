@@ -85,6 +85,30 @@
                             </a>
                         </div>
                     <% } %>
+
+                    <% if (user && user.role_name !== 'admin') { %>
+                        <div class="project-actions">
+                            <% if (isVolunteering) { %>
+                                <p class="volunteer-status">
+                                    <i data-lucide="check-circle" class="icon-sm"></i>
+                                    You are volunteering for this project
+                                </p>
+                                <form action="/remove-volunteer/<%= project.project_id %>" method="POST" style="width: 100%;">
+                                    <button type="submit" class="button button-outline button-full">
+                                        <i data-lucide="x" class="icon-sm"></i>
+                                        Remove as Volunteer
+                                    </button>
+                                </form>
+                            <% } else { %>
+                                <form action="/volunteer/<%= project.project_id %>" method="POST" style="width: 100%;">
+                                    <button type="submit" class="button button-full">
+                                        <i data-lucide="heart" class="icon-sm"></i>
+                                        Volunteer for This Project
+                                    </button>
+                                </form>
+                            <% } %>
+                        </div>
+                    <% } %>
                 </div>
             </aside>
         </div>

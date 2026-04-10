@@ -61,6 +61,12 @@ app.use((req, res, next) => {
 
     res.locals.user = req.session.user || null;
 
+    // One-time open menu flag: expose to templates then clear from session
+    res.locals.openMenu = req.session && req.session.openMenu ? true : false;
+    if (req.session && req.session.openMenu) {
+        delete req.session.openMenu;
+    }
+
     res.locals.NODE_ENV = NODE_ENV;
     res.locals.currentPath = req.path;
     next();

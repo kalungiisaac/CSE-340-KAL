@@ -4,11 +4,6 @@ services:
     env: node
     plan: free
 
-    #root directory
-    rootDir: CSE-340-COURSE-REPO 
-
-
-
     buildCommand: npm install
     startCommand: npm start
     envVars:
@@ -18,4 +13,4 @@ services:
         value: 3000
         sync: false
 
-autoDeply: yes
+autoDeploy: yes

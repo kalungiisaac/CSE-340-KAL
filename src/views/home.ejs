@@ -9,15 +9,22 @@
     <div class="logo-section">
         <img class="main-logo" src="images/cse340-service-network.png" alt="CSE 340 Service Network Logo">
         <div class="logo-text">
-          <a href="/register" class="button-add">
-            <i data-lucide="user-plus"></i>
-            Register Now
-          </a>
+          <% if (isLoggedIn) { %>
+            <a href="/dashboard" class="button-primary">
+              <i data-lucide="grid"></i>
+              Go to Dashboard
+            </a>
+          <% } else { %>
+            <a href="/login" class="button-primary">
+              <i data-lucide="log-in"></i>
+              Login Now
+            </a>
+          <% } %>
         </div>
     </div>
 
     <% if (isLoggedIn) { %>
-        <p><a href="/dashboard">My Dashboard</a></p>
+        <!-- Dashboard link removed from here as it's now in the hero section -->
     <% } %>
 
 </main>

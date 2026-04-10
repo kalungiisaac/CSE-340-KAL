@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
-import { createUser, authenticateUser, updatePassword, findUserByEmail, countUsers } from '../models/users.js';
+import { createUser, authenticateUser, updatePassword, findUserByEmail, countUsers, getAllUsers } from '../models/users.js';
+import { getVolunteerProjectsByUserId } from '../models/projects.js';
 
 const showForgotPasswordForm = (req, res) => {
     res.render('forgot-password', { title: 'Forgot Password' });
@@ -88,6 +89,8 @@ const processLoginForm = async (req, res) => {
         if (user) {
             // Store user info in session
             req.session.user = user;
+            // Set a one-time flag so the menu can auto-open after login
+            req.session.openMenu = true;
             req.flash('success', 'Login successful!');
 
             if (process.env.NODE_ENV === 'development') {
@@ -123,15 +126,33 @@ const requireLogin = (req, res, next) => {
     next();
 };
 
-const showDashboard = (req, res) => {
-    const user = req.session.user;
-    res.render('dashboard', { 
-        title: 'Dashboard',
-        name: user.name,
-        email: user.email,
-        username: user.username,
-        role: user.role_name
-    });
+const showDashboard = async (req, res, next) => {
+    try {
+        const user = req.session.user;
+        
+        // Get the projects the user has volunteered for
+        const volunteerProjects = await getVolunteerProjectsByUserId(user.user_id);
+        
+        res.render('dashboard', { 
+            title: 'Dashboard',
+            name: user.name,
+            email: user.email,
+            username: user.username,
+            role: user.role_name,
+            volunteerProjects
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const showAllUsers = async (req, res, next) => {
+    try {
+        const users = await getAllUsers();
+        res.render('admin-users', { title: 'Admin - Users', users });
+    } catch (error) {
+        next(error);
+    }
 };
 
 /**
@@ -173,4 +194,5 @@ export {
     processForgotPasswordForm,
     showResetPasswordForm,
     processResetPasswordForm
+    ,showAllUsers
 };

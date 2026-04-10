@@ -17,7 +17,9 @@ import {
   processNewProjectForm,
   projectValidation,
   showEditProjectForm,
-  processEditProjectForm 
+  processEditProjectForm,
+  processAddVolunteer,
+  processRemoveVolunteer
 } from './projects.js';
 import { 
   showCategoriesPage, 
@@ -44,6 +46,7 @@ import {
   processForgotPasswordForm,
   showResetPasswordForm,
   processResetPasswordForm
+  , showAllUsers
 } from './users.js';
 
 const router = express.Router();
@@ -68,6 +71,9 @@ router.post('/reset-password', processResetPasswordForm);
 // Protected dashboard route
 router.get('/dashboard', requireLogin, showDashboard);
 
+// Admin users list
+router.get('/admin/users', requireRole('admin'), showAllUsers);
+
 // Project routes
 router.get('/projects', showProjectsPage);
 router.get('/new-project', requireRole('admin'), showNewProjectForm);
@@ -75,6 +81,10 @@ router.post('/new-project', requireRole('admin'), projectValidation, processNewP
 router.get('/edit-project/:id', requireRole('admin'), showEditProjectForm);
 router.post('/edit-project/:id', requireRole('admin'), projectValidation, processEditProjectForm);
 router.get('/project/:id', showProjectDetailsPage);
+
+// Volunteer routes
+router.post('/volunteer/:id', requireLogin, processAddVolunteer);
+router.post('/remove-volunteer/:id', requireLogin, processRemoveVolunteer);
 
 // Organization routes
 router.get('/organizations', showOrganizationsPage);

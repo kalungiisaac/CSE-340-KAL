@@ -12,31 +12,54 @@
             <p><strong>Role:</strong> <span class="role-badge"><%= role %></span></p>
         </div>
     </section>
-
-    <h2 class="mt-12">Quick Actions</h2>
-    <div class="dashboard-grid">
-        <a href="/projects" class="action-card">
-            <i data-lucide="briefcase" class="icon-lg"></i>
-            <h3>Explore Projects</h3>
-            <p>Browse available service opportunities.</p>
-            <span class="action-btn">View All</span>
-        </a>
-
-        <% if (role === 'admin') { %>
-            <a href="/organizations" class="action-card">
-                <i data-lucide="building-2" class="icon-lg"></i>
-                <h3>Manage Organizations</h3>
-                <p>Add or edit service partners.</p>
-                <span class="action-btn">Manage</span>
-            </a>
-            <a href="/categories" class="action-card">
-                <i data-lucide="layers" class="icon-lg"></i>
-                <h3>Service Categories</h3>
-                <p>Manage project classification.</p>
-                <span class="action-btn">Configure</span>
-            </a>
-        <% } %>
-    </div>
+    <% if (volunteerProjects && volunteerProjects.length > 0) { %>
+        <h2 class="mt-12">My Volunteer Projects</h2>
+        <section class="volunteer-projects">
+            <div class="projects-list">
+                <% volunteerProjects.forEach(project => { %>
+                    <div class="volunteer-project-card">
+                        <div class="project-info">
+                            <h3><a href="/project/<%= project.project_id %>"><%= project.title %></a></h3>
+                            <p class="organization-name">
+                                <i data-lucide="building-2" class="icon-sm"></i>
+                                <%= project.organization_name %>
+                            </p>
+                            <p class="project-date">
+                                <i data-lucide="calendar" class="icon-sm"></i>
+                                <%= new Date(project.date).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
+                            </p>
+                            <p class="project-location">
+                                <i data-lucide="map-pin" class="icon-sm"></i>
+                                <%= project.location %>
+                            </p>
+                            <p class="project-description"><%= project.description.substring(0, 100) %>...</p>
+                        </div>
+                        <div class="project-actions">
+                            <a href="/project/<%= project.project_id %>" class="button button-outline">
+                                <i data-lucide="eye" class="icon-sm"></i>
+                                View Details
+                            </a>
+                            <form action="/remove-volunteer/<%= project.project_id %>" method="POST" style="display: inline;">
+                                <button type="submit" class="button button-outline" style="background-color: #f5f5f5; color: #d32f2f;">
+                                    <i data-lucide="trash-2" class="icon-sm"></i>
+                                    Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </section>
+    <% } else { %>
+        <section class="empty-state-section mt-12">
+            <div class="empty-state">
+                <i data-lucide="inbox" class="icon-lg"></i>
+                <h3>No Volunteer Projects Yet</h3>
+                <p>You haven't signed up as a volunteer for any projects. Browse available opportunities to get started!</p>
+                <a href="/projects" class="button">Explore Projects</a>
+            </div>
+        </section>
+    <% } %>
 
 </main>
 

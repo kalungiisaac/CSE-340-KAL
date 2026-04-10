@@ -183,5 +183,110 @@ const updateProject = async (projectId, title, description, location, date, orga
     return result.rows[0].project_id;
 };
 
+// Volunteer functions
+const addVolunteer = async (userId, projectId) => {
+    const query = `
+        INSERT INTO volunteer (user_id, project_id)
+        VALUES ($1, $2)
+        RETURNING volunteer_id;
+    `;
+
+    const query_params = [userId, projectId];
+    const result = await db.query(query, query_params);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to add volunteer');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('User', userId, 'volunteered for project', projectId);
+    }
+
+    return result.rows[0].volunteer_id;
+};
+
+const removeVolunteer = async (userId, projectId) => {
+    const query = `
+        DELETE FROM volunteer
+        WHERE user_id = $1 AND project_id = $2
+        RETURNING volunteer_id;
+    `;
+
+    const query_params = [userId, projectId];
+    const result = await db.query(query, query_params);
+
+    if (result.rows.length === 0) {
+        throw new Error('Volunteer record not found');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('User', userId, 'removed volunteer status for project', projectId);
+    }
+
+    return result.rows[0].volunteer_id;
+};
+
+const isUserVolunteer = async (userId, projectId) => {
+    const query = `
+        SELECT volunteer_id FROM volunteer
+        WHERE user_id = $1 AND project_id = $2;
+    `;
+
+    const query_params = [userId, projectId];
+    try {
+        const result = await db.query(query, query_params);
+        return result.rows.length > 0;
+    } catch (error) {
+        // If the volunteer table doesn't exist yet, treat as not volunteering.
+        if (error.code === '42P01') {
+            return false;
+        }
+        throw error;
+    }
+};
+
+const getVolunteerProjectsByUserId = async (userId) => {
+    const query = `
+        SELECT
+            p.project_id,
+            p.title,
+            p.description,
+            p.project_date AS date,
+            p.location,
+            p.organization_id,
+            o.name AS organization_name,
+            v.created_at AS volunteered_at
+        FROM volunteer v
+        JOIN service_project p ON v.project_id = p.project_id
+        JOIN organization o ON p.organization_id = o.organization_id
+        WHERE v.user_id = $1
+        ORDER BY p.project_date DESC;
+    `;
+
+    const query_params = [userId];
+    try {
+        const result = await db.query(query, query_params);
+        return result.rows;
+    } catch (error) {
+        // If the volunteer table doesn't exist yet, return empty list instead of crashing.
+        if (error.code === '42P01') {
+            return [];
+        }
+        throw error;
+    }
+};
+
 // Export the model functions
-export { getProjectsReport, getUpcomingProjects, getProjectDetails, getProjectsByOrganizationId, getCategoriesByProjectId, createProject, updateProject };
+export { 
+    getProjectsReport, 
+    getUpcomingProjects, 
+    getProjectDetails, 
+    getProjectsByOrganizationId, 
+    getCategoriesByProjectId, 
+    createProject, 
+    updateProject,
+    addVolunteer,
+    removeVolunteer,
+    isUserVolunteer,
+    getVolunteerProjectsByUserId
+};
