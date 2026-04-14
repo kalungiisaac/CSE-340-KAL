@@ -45,8 +45,9 @@ import {
   showForgotPasswordForm,
   processForgotPasswordForm,
   showResetPasswordForm,
-  processResetPasswordForm
-  , showAllUsers
+  processResetPasswordForm,
+  showAllUsers,
+  showUserDetails
 } from './users.js';
 
 const router = express.Router();
@@ -73,6 +74,7 @@ router.get('/dashboard', requireLogin, showDashboard);
 
 // Admin users list
 router.get('/admin/users', requireRole('admin'), showAllUsers);
+router.get('/admin/user/:id', requireRole('admin'), showUserDetails);
 
 // Project routes
 router.get('/projects', showProjectsPage);

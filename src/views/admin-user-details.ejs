@@ -1,0 +1,67 @@
+<%- include('partials/header') %>
+
+<main class="dashboard-page">
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>User Profile: <%= targetUser.name %></h1>
+            <p class="user-role-badge"><%= targetUser.role_name %></p>
+        </header>
+
+        <section class="user-info-section">
+            <div class="info-card">
+                <h2>Account Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Full Name:</span>
+                        <span class="info-value"><%= targetUser.name %></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value"><%= targetUser.email %></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Username:</span>
+                        <span class="info-value">@<%= targetUser.username %></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">User ID:</span>
+                        <span class="info-value">#<%= targetUser.user_id %></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="volunteer-history-section">
+            <div class="info-card">
+                <h2>Volunteer History</h2>
+                <% if (volunteerProjects && volunteerProjects.length > 0) { %>
+                    <div class="projects-list">
+                        <% volunteerProjects.forEach(project => { %>
+                            <div class="project-item">
+                                <div class="project-info">
+                                    <h3><%= project.title %></h3>
+                                    <p class="org-name">with <%= project.organization_name %></p>
+                                    <p class="project-meta">
+                                        <span class="project-date">📅 <%= new Date(project.date).toLocaleDateString() %></span>
+                                        <span class="project-location">📍 <%= project.location %></span>
+                                    </p>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="/project/<%= project.project_id %>" class="btn-secondary">View Project</a>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <p class="empty-state">This user hasn't volunteered for any projects yet.</p>
+                <% } %>
+            </div>
+        </section>
+
+        <div class="admin-actions">
+            <a href="/admin/users" class="btn-back">&larr; Back to Users List</a>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>

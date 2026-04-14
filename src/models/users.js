@@ -111,4 +111,22 @@ const updatePassword = async (email, passwordHash) => {
     return result.rows[0].user_id;
 };
 
-export { createUser, authenticateUser, updatePassword, findUserByEmail, findUserByEmailOrUsername, countUsers, getAllUsers };
+const findUserById = async (userId) => {
+    const query = `
+        SELECT u.user_id, u.name, u.email, u.username, r.role_name 
+        FROM users u
+        JOIN roles r ON u.role_id = r.role_id
+        WHERE u.user_id = $1
+    `;
+    const query_params = [userId];
+    
+    const result = await db.query(query, query_params);
+
+    if (result.rows.length === 0) {
+        return null; // User not found
+    }
+    
+    return result.rows[0];
+};
+
+export { createUser, authenticateUser, updatePassword, findUserByEmail, findUserByEmailOrUsername, countUsers, getAllUsers, findUserById };

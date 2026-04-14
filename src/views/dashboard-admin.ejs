@@ -1,0 +1,443 @@
+<%- include('partials/header') %>
+
+<main class="admin-pro-dashboard">
+    <div class="pro-container">
+        <!-- Header Section -->
+        <header class="pro-header">
+            <div class="header-content">
+                <span class="badge-admin">Administration Portal</span>
+                <h1>System Overview</h1>
+                <p>Welcome back, <span class="admin-name"><%= user.name %></span>. Here's what's happening today.</p>
+            </div>
+            <div class="header-actions">
+                <a href="/new-project" class="btn-pro-primary">
+                    <i data-lucide="plus-circle"></i> New Project
+                </a>
+            </div>
+        </header>
+
+        <!-- Metrics Grid -->
+        <section class="metrics-row">
+            <div class="metric-card">
+                <div class="metric-icon users-bg"><i data-lucide="users"></i></div>
+                <div class="metric-data">
+                    <span class="metric-value"><%= stats.userCount %></span>
+                    <span class="metric-label">Total Users</span>
+                </div>
+                <div class="metric-trend positive">System Active</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon projects-bg"><i data-lucide="briefcase"></i></div>
+                <div class="metric-data">
+                    <span class="metric-value"><%= stats.projectCount %></span>
+                    <span class="metric-label">Active Projects</span>
+                </div>
+                <div class="metric-trend">Across all orgs</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon orgs-bg"><i data-lucide="building-2"></i></div>
+                <div class="metric-data">
+                    <span class="metric-value"><%= stats.orgCount %></span>
+                    <span class="metric-label">Organizations</span>
+                </div>
+                <div class="metric-trend">Partner Network</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon volunteer-bg"><i data-lucide="heart"></i></div>
+                <div class="metric-data">
+                    <span class="metric-value"><%= stats.volunteerCount %></span>
+                    <span class="metric-label">Total Volunteers</span>
+                </div>
+                <div class="metric-trend positive">+ New signups</div>
+            </div>
+        </section>
+
+        <div class="pro-main-grid">
+            <!-- Left Column: Management & Activity -->
+            <div class="pro-col">
+                <section class="pro-card management-tools">
+                    <div class="card-header">
+                        <h2>Quick Management</h2>
+                        <i data-lucide="settings"></i>
+                    </div>
+                    <div class="tools-grid">
+                        <a href="/admin/users" class="tool-item">
+                            <div class="tool-icon"><i data-lucide="user-cog"></i></div>
+                            <span>Users</span>
+                        </a>
+                        <a href="/new-organization" class="tool-item">
+                            <div class="tool-icon"><i data-lucide="plus-square"></i></div>
+                            <span>Add Org</span>
+                        </a>
+                        <a href="/new-category" class="tool-item">
+                            <div class="tool-icon"><i data-lucide="tag"></i></div>
+                            <span>Categories</span>
+                        </a>
+                        <a href="/organizations" class="tool-item">
+                            <div class="tool-icon"><i data-lucide="layout"></i></div>
+                            <span>View All</span>
+                        </a>
+                    </div>
+                </section>
+
+                <section class="pro-card table-card">
+                    <div class="card-header">
+                        <h2>Most Popular Projects</h2>
+                        <a href="/projects" class="view-all">View All</a>
+                    </div>
+                    <div class="pro-list">
+                        <% if (stats.topProjects && stats.topProjects.length > 0) { %>
+                            <% stats.topProjects.forEach(project => { %>
+                                <div class="list-item">
+                                    <div class="item-main">
+                                        <strong><%= project.title %></strong>
+                                        <span class="item-sub">Service Opportunity</span>
+                                    </div>
+                                    <div class="item-stat">
+                                        <span class="count-badge"><%= project.volunteer_count %></span>
+                                        <span class="count-label">Volunteers</span>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <p class="empty-state">No project data yet.</p>
+                        <% } %>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Recent Activity -->
+            <div class="pro-col">
+                <section class="pro-card activity-card">
+                    <div class="card-header">
+                        <h2>Recent Signups</h2>
+                        <i data-lucide="user-plus"></i>
+                    </div>
+                    <div class="activity-timeline">
+                        <% if (stats.recentUsers && stats.recentUsers.length > 0) { %>
+                            <% stats.recentUsers.forEach(user => { %>
+                                <div class="timeline-item">
+                                    <div class="timeline-point"></div>
+                                    <div class="timeline-content">
+                                        <div class="user-row">
+                                            <strong><%= user.name %></strong>
+                                            <span class="time"><%= new Date(user.created_at).toLocaleDateString() %></span>
+                                        </div>
+                                        <p class="user-email"><%= user.email %></p>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <p class="empty-state">No recent activity.</p>
+                        <% } %>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/admin/users" class="btn-text">Manage All Users &rarr;</a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+    :root {
+        --pro-primary: #4f46e5;
+        --pro-primary-hover: #4338ca;
+        --pro-bg: #f8fafc;
+        --pro-card-bg: #ffffff;
+        --pro-text-main: #1e293b;
+        --pro-text-muted: #64748b;
+        --pro-border: #e2e8f0;
+        --pro-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .admin-pro-dashboard {
+        background-color: var(--pro-bg);
+        min-height: 100vh;
+        padding: 2.5rem 1.5rem;
+        color: var(--pro-text-main);
+    }
+
+    .pro-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Header */
+    .pro-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 2.5rem;
+    }
+
+    .badge-admin {
+        background: #e0e7ff;
+        color: var(--pro-primary);
+        padding: 0.25rem 0.75rem;
+        border-radius: 99px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
+        display: inline-block;
+    }
+
+    .pro-header h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        margin: 0 0 0.5rem 0;
+        letter-spacing: -0.025em;
+    }
+
+    .admin-name { color: var(--pro-primary); font-weight: 700; }
+    .pro-header p { color: var(--pro-text-muted); margin: 0; }
+
+    .btn-pro-primary {
+        background: var(--pro-primary);
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-pro-primary:hover {
+        background: var(--pro-primary-hover);
+        transform: translateY(-2px);
+    }
+
+    /* Metrics */
+    .metrics-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .metric-card {
+        background: var(--pro-card-bg);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid var(--pro-border);
+        box-shadow: var(--pro-shadow);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .metric-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .users-bg { background: #eff6ff; color: #2563eb; }
+    .projects-bg { background: #fdf2f8; color: #db2777; }
+    .orgs-bg { background: #f0fdf4; color: #16a34a; }
+    .volunteer-bg { background: #fff7ed; color: #ea580c; }
+
+    .metric-value {
+        display: block;
+        font-size: 1.875rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+    }
+
+    .metric-label {
+        color: var(--pro-text-muted);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .metric-trend {
+        margin-top: 1rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--pro-text-muted);
+    }
+
+    .metric-trend.positive { color: #16a34a; }
+
+    /* Grid Layout */
+    .pro-main-grid {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr;
+        gap: 2rem;
+    }
+
+    .pro-col {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .pro-card {
+        background: var(--pro-card-bg);
+        border-radius: 1rem;
+        border: 1px solid var(--pro-border);
+        box-shadow: var(--pro-shadow);
+        padding: 1.5rem;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .card-header h2 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    /* Management Tools */
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+
+    .tool-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: var(--pro-text-main);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+
+    .tool-item:hover {
+        background: #f8fafc;
+        border-color: var(--pro-border);
+        transform: translateY(-3px);
+    }
+
+    .tool-icon {
+        width: 40px;
+        height: 40px;
+        background: #f1f5f9;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--pro-primary);
+    }
+
+    .tool-item span {
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    /* Activity List */
+    .pro-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 0.75rem;
+    }
+
+    .item-main { display: flex; flex-direction: column; }
+    .item-sub { font-size: 0.75rem; color: var(--pro-text-muted); }
+
+    .item-stat { text-align: right; }
+    .count-badge {
+        display: block;
+        font-size: 1.125rem;
+        font-weight: 800;
+        color: var(--pro-primary);
+    }
+    .count-label { font-size: 0.7rem; color: var(--pro-text-muted); font-weight: 600; text-transform: uppercase; }
+
+    /* Timeline */
+    .activity-timeline {
+        position: relative;
+        padding-left: 1.5rem;
+    }
+
+    .activity-timeline::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--pro-border);
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-bottom: 1.5rem;
+    }
+
+    .timeline-point {
+        position: absolute;
+        left: -1.5rem;
+        top: 0.25rem;
+        width: 10px;
+        height: 10px;
+        background: var(--pro-primary);
+        border: 2px solid white;
+        border-radius: 50%;
+        transform: translateX(-40%);
+    }
+
+    .user-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.25rem;
+    }
+
+    .time { font-size: 0.75rem; color: var(--pro-text-muted); }
+    .user-email { font-size: 0.85rem; color: var(--pro-text-muted); margin: 0; }
+
+    .card-footer {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--pro-border);
+    }
+
+    .btn-text {
+        color: var(--pro-primary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    @media (max-width: 992px) {
+        .pro-main-grid { grid-template-columns: 1fr; }
+        .pro-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    }
+
+    @media (max-width: 640px) {
+        .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
+
+<%- include('partials/footer') %>

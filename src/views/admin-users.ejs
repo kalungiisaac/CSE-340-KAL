@@ -20,6 +20,7 @@
                             <th style="width:30%">Email</th>
                             <th style="width:18%">Username</th>
                             <th style="width:16%">Role</th>
+                            <th style="width:10%">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,6 +37,9 @@
                                         <% } else { %>
                                             <span class="role-badge role-user">USER</span>
                                         <% } %>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/user/<%= user.user_id %>" class="btn-sm btn-info">View Profile</a>
                                     </td>
                                 </tr>
                             <% }); %>

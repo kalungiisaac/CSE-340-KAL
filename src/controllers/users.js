@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
-import { createUser, authenticateUser, updatePassword, findUserByEmail, countUsers, getAllUsers } from '../models/users.js';
+import { createUser, authenticateUser, updatePassword, findUserByEmail, countUsers, getAllUsers, findUserById } from '../models/users.js';
 import { getVolunteerProjectsByUserId } from '../models/projects.js';
+import { getAdminStats } from '../models/admin.js';
 
 const showForgotPasswordForm = (req, res) => {
     res.render('forgot-password', { title: 'Forgot Password' });
@@ -131,11 +132,20 @@ const showDashboard = async (req, res, next) => {
     try {
         const user = req.session.user;
         
+        if (user.role_name === 'admin') {
+            const stats = await getAdminStats();
+            return res.render('dashboard-admin', { 
+                title: 'Admin Dashboard',
+                user,
+                stats
+            });
+        }
+        
         // Get the projects the user has volunteered for
         const volunteerProjects = await getVolunteerProjectsByUserId(user.user_id);
         
         res.render('dashboard', { 
-            title: 'Dashboard',
+            title: 'User Dashboard',
             name: user.name,
             email: user.email,
             username: user.username,
@@ -151,6 +161,28 @@ const showAllUsers = async (req, res, next) => {
     try {
         const users = await getAllUsers();
         res.render('admin-users', { title: 'Admin - Users', users });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const showUserDetails = async (req, res, next) => {
+    try {
+        const userId = req.params.id;
+        const targetUser = await findUserById(userId);
+
+        if (!targetUser) {
+            req.flash('error', 'User not found.');
+            return res.redirect('/admin/users');
+        }
+
+        const volunteerProjects = await getVolunteerProjectsByUserId(userId);
+
+        res.render('admin-user-details', {
+            title: `User Details: ${targetUser.name}`,
+            targetUser,
+            volunteerProjects
+        });
     } catch (error) {
         next(error);
     }
@@ -194,6 +226,7 @@ export {
     showForgotPasswordForm,
     processForgotPasswordForm,
     showResetPasswordForm,
-    processResetPasswordForm
-    ,showAllUsers
+    processResetPasswordForm,
+    showAllUsers,
+    showUserDetails
 };

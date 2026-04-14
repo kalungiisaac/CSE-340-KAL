@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="/css/main.css">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="/js/button.js" defer></script>
     <script src="/js/password-toggle.js" defer></script>
     <script src="/js/hamburger.js" defer></script>
     <% if (openMenu) { %>
@@ -36,8 +35,10 @@
                     <li><a href="/organizations" class="<%= currentPath.startsWith('/organization') ? 'active' : '' %>" <%= currentPath.startsWith('/organization') ? 'aria-current="page"' : '' %>><i data-lucide="building-2" class="icon-sm"></i> Organizations</a></li>
                     <li><a href="/projects" class="<%= currentPath.startsWith('/project') ? 'active' : '' %>" <%= currentPath.startsWith('/project') ? 'aria-current="page"' : '' %>><i data-lucide="briefcase" class="icon-sm"></i> Projects</a></li>
                     <li><a href="/categories" class="<%= currentPath.startsWith('/categor') ? 'active' : '' %>" <%= currentPath.startsWith('/categor') ? 'aria-current="page"' : '' %>><i data-lucide="layers" class="icon-sm"></i> Categories</a></li>
-                    <% if (isLoggedIn && user && user.role_name === 'admin') { %>
+                    <% if (isLoggedIn) { %>
                         <li><a href="/dashboard" class="<%= currentPath === '/dashboard' ? 'active' : '' %>" <%= currentPath === '/dashboard' ? 'aria-current="page"' : '' %>><i data-lucide="grid" class="icon-sm"></i> Dashboard</a></li>
+                    <% } %>
+                    <% if (isLoggedIn && user && user.role_name === 'admin') { %>
                         <li><a href="/admin/users" class="<%= currentPath === '/admin/users' ? 'active' : '' %>" <%= currentPath === '/admin/users' ? 'aria-current="page"' : '' %>><i data-lucide="users" class="icon-sm"></i> Admin Users</a></li>
                     <% } %>
                     <% if (isLoggedIn) { %>
@@ -70,9 +71,11 @@
                     <li><a href="/organizations" class="<%= currentPath.startsWith('/organization') ? 'active' : '' %>"><i data-lucide="building-2" class="icon-sm"></i> Organizations</a></li>
                     <li><a href="/projects" class="<%= currentPath.startsWith('/project') ? 'active' : '' %>"><i data-lucide="briefcase" class="icon-sm"></i> Projects</a></li>
                     <li><a href="/categories" class="<%= currentPath.startsWith('/categor') ? 'active' : '' %>"><i data-lucide="layers" class="icon-sm"></i> Categories</a></li>
-                    <% if (isLoggedIn && user && user.role_name === 'admin') { %>
+                    <% if (isLoggedIn) { %>
                         <li class="drawer-divider"></li>
                         <li><a href="/dashboard" class="<%= currentPath === '/dashboard' ? 'active' : '' %>"><i data-lucide="grid" class="icon-sm"></i> Dashboard</a></li>
+                    <% } %>
+                    <% if (isLoggedIn && user && user.role_name === 'admin') { %>
                         <li><a href="/admin/users" class="<%= currentPath === '/admin/users' ? 'active' : '' %>"><i data-lucide="users" class="icon-sm"></i> Admin Users</a></li>
                     <% } %>
                     <li class="drawer-divider"></li>
